@@ -11,14 +11,24 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/getDiscList': {
+      '/api/getDiscList': {
         target: 'https://c.y.qq.com',
         headers: {
           referer: 'https://c.y.qq.com/',
           host: 'c.y.qq.com'
         },
         pathRewrite: {
-          '^/getDiscList': '/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+          '^/api/getDiscList': '/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
+        }
+      },
+      '/api/getSingerList': {
+        target: 'https://u.y.qq.com',
+        headers: {
+          referer: 'https://u.y.qq.com/',
+          host: 'u.y.qq.com'
+        },
+        pathRewrite: {
+          '^/api/getSingerList': '/cgi-bin/musicu.fcg'
         }
       }
     },

@@ -3,7 +3,7 @@ export const commonParams = {
   incharset: 'utf-8',
   outCharset: 'utf_8',
   notice: 0,
-  format: 'json'
+  format: 'jsonp'
 }
 
 export const options = {
