@@ -1,6 +1,7 @@
 <template>
   <div>
-    <list-view :singerList="singerList"></list-view>
+    <list-view @select="selectSinger" :singerList="singerList"></list-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -25,14 +26,17 @@ export default {
     this._getSingerList()
   },
   methods: {
+    selectSinger (singer) {
+      this.$router.push({
+        path: '/singer/' + singer.id
+      })
+    },
     _getSingerList () {
       getSingerList().then(this.getSingerListSucc)
     },
     getSingerListSucc (res) {
       if (res.code === ERR_OK) {
         this.singerList = this._normalizeSinger(res.data.list)
-
-        console.log(this.singerList)
       }
     },
     _normalizeSinger (list) {
@@ -45,9 +49,9 @@ export default {
       list.forEach((item, index) => {
         if (index < HOT_SINGER_LEN) {
           map.hot.items.push({
-            id: item.Fsinger_id,
+            id: item.Fsinger_mid,
             name: item.Fsinger_name,
-            avatar: 'http://y.gtimg.cn/music/photo_new/T001R150x150M000' + item.Fsinger_mid + '.jpg?max_age=2592000'
+            avatar: 'http://y.gtimg.cn/music/photo_new/T001R300x300M000' + item.Fsinger_mid + '.jpg?max_age=2592000'
           })
         }
         const key = item.Findex
@@ -58,7 +62,7 @@ export default {
           }
         }
         map[key].items.push({
-          id: item.Fsinger_id,
+          id: item.Fsinger_mid,
           name: item.Fsinger_name,
           avatar: 'http://y.gtimg.cn/music/photo_new/T001R150x150M000' + item.Fsinger_mid + '.jpg?max_age=2592000'
         })

@@ -4,7 +4,12 @@
       <div v-for="group in singerList" class="list-group" ref="listGroup" :key="group.title">
         <h2 class="list-group-title">{{group.title}}</h2>
         <div>
-          <div v-for="item in group.items" :key="item.id" class="list-group-item">
+          <div
+            @click="selectItem(item)"
+            v-for="item in group.items"
+            :key="item.id"
+            class="list-group-item"
+          >
             <img class="avatar" v-lazy="item.avatar">
             <span class="name">{{item.name}}</span>
           </div>
@@ -40,6 +45,7 @@
 <script>
 import Bscroll from 'better-scroll'
 import Loading from '@/base/loading/loading'
+import { mapMutations } from 'vuex'
 const TITLE_HEIGHT = 29
 
 export default {
@@ -152,7 +158,14 @@ export default {
         this.scrollY = -this.listHeight[index]
         this.scroll.scrollToElement(this.$refs.listGroup[index])
       }
-    }
+    },
+    selectItem (item) {
+      this.changeSinger(item)
+      this.$router.push({
+        path: '/singer/' + item.id
+      })
+    },
+    ...mapMutations(['changeSinger'])
   }
 }
 </script>

@@ -1,9 +1,10 @@
-import {getLyric} from 'api/song'
-import {ERR_OK} from 'api/config'
-import {Base64} from 'js-base64'
+/* import {getLyric} from 'api/song' */
+/* import { ERR_OK } from '@/api/config' */
+/* import { Base64 } from 'js-base64' */
 
 export default class Song {
-  constructor({id, mid, singer, name, album, duration, image, url}) {
+  // eslint-disable-next-line
+  constructor({ id, mid, singer, name, album, duration, image, url }) {
     this.id = id
     this.mid = mid
     this.singer = singer
@@ -13,26 +14,23 @@ export default class Song {
     this.image = image
     this.url = url
   }
-
-  getLyric() {
-    if (this.lyric) {
-      return Promise.resolve(this.lyric)
-    }
-
-    return new Promise((resolve, reject) => {
-      getLyric(this.mid).then((res) => {
-        if (res.retcode === ERR_OK) {
-          this.lyric = Base64.decode(res.lyric)
-          resolve(this.lyric)
-        } else {
-          reject('no lyric')
-        }
+  /*   getLyric () {
+      if (this.lyric) {
+        return Promise.resolve(this.lyric)
+      }
+      return new Promise((resolve, reject) => {
+        getLyric(this.mid).then((res) => {
+          if (res.retcode === ERR_OK) {
+            this.lyric = Base64.decode(res.lyric)
+            resolve(this.lyric)
+          } else {
+            reject('no lyric')
+          }
+        })
       })
-    })
-  }
+    } */
 }
-
-export function createSong(musicData) {
+export function createSong (musicData) {
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
@@ -41,11 +39,11 @@ export function createSong(musicData) {
     album: musicData.albumname,
     duration: musicData.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+    url: `http://isure.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=2826130024&vkey=BE051916940B69FC96A06A16D4540635AC883B33EEE0AB5C47495AD4DA2286C35F39C6008A2E61E65650160E4EE802679045FCF3C8DCDC4D&uin=0&fromtag=38`
   })
 }
 
-function filterSinger(singer) {
+function filterSinger (singer) {
   let ret = []
   if (!singer) {
     return ''
@@ -55,4 +53,3 @@ function filterSinger(singer) {
   })
   return ret.join('/')
 }
-

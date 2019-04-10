@@ -36,7 +36,8 @@ export function getSingerList () {
 
 /* ajax请求全部歌单 */
 export function getDiscList () {
-  /*     url=https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg //实际请求地址手机端请求需更改 */
+  /*     url=https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg  //实际请求地址手机端请求需更改 */
+  /*   /api/getDiscList */
   const url = '/api/getDiscList'
   const data = {
     picmid: 1,

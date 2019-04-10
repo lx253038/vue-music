@@ -29,10 +29,12 @@ export default {
   data () {
     return {
       swiperOption: {
+
         pagination: '.swiper-pagination',
         loop: true,
         autoplay: 1500,
         autoplayDisableOnInteraction: false
+
       }
     }
   },
