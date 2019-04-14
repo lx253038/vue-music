@@ -14,7 +14,14 @@
       <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-    <song-list @scroll="onscroll" class="list" :songlist="songlist" :rank="false" ref="songlist"></song-list>
+    <song-list
+      @select="onselect"
+      @scroll="onscroll"
+      class="list"
+      :songlist="songlist"
+      :rank="false"
+      ref="songlist"
+    ></song-list>
     <div class="loading-container" v-show="!songlist.length">
       <loading></loading>
     </div>
@@ -24,6 +31,7 @@
 <script>
 import SongList from '@/base/song-list/song-list'
 import Loading from '@/base/loading/loading'
+import { mapActions } from 'vuex'
 const RESERVED_HEIGHT = 40
 export default {
   name: 'MusicList',
@@ -86,6 +94,13 @@ export default {
     onscroll (pos) {
       this.scrollY = pos.y
     },
+    onselect (song, index) {
+      this.selectPlay({
+        list: this.songlist,
+        index: index
+      })
+    },
+    ...mapActions(['selectPlay']),
     random () { }
   }
 }

@@ -1,7 +1,12 @@
 <template>
   <div class="song-list" ref="songlist">
     <ul>
-      <li class="item" v-for="(song, index) in songlist" :key="index">
+      <li
+        @click="selectItem(song,index)"
+        class="item"
+        v-for="(song, index) in songlist"
+        :key="index"
+      >
         <div class="rank" v-show="rank">
           <span>66666</span>
         </div>
@@ -34,6 +39,9 @@ export default {
   methods: {
     getDesc (song) {
       return `${song.singer} • ${song.album}`
+    },
+    selectItem (song, index) {
+      this.$emit('select', song, index)
     }
   }
 }
