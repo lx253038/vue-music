@@ -8,11 +8,11 @@
           <ul>
             <li @click="selectItem(item)" v-for="item in discList" class="item" :key="item.dissid">
               <div class="icon">
-                <img width="60" height="60" v-lazy="item.imgurl">
+                <img width="60" height="60" v-lazy="item.cover">
               </div>
               <div class="text">
-                <h2 class="name" v-html="item.creator.name"></h2>
-                <p class="desc" v-html="item.dissname"></p>
+                <h2 class="name" v-html="item.username"></h2>
+                <p class="desc" v-html="item.title"></p>
               </div>
             </li>
           </ul>
@@ -66,8 +66,8 @@ export default {
     },
     getDiscListSucc (res) {
       if (res.code === ERR_OK) {
-        this.discList = res.data.list
-        console.log(res.data.list)
+        this.discList = res.data.v_hot
+        console.log(res.data.v_hot)
       }
     },
     // 点击某一歌单

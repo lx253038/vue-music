@@ -15,16 +15,21 @@
     </div>
     <div class="bg-layer" ref="layer"></div>
     <song-list @scroll="onscroll" class="list" :songlist="songlist" :rank="false" ref="songlist"></song-list>
+    <div class="loading-container" v-show="!songlist.length">
+      <loading></loading>
+    </div>
   </div>
 </template>
 
 <script>
 import SongList from '@/base/song-list/song-list'
+import Loading from '@/base/loading/loading'
 const RESERVED_HEIGHT = 40
 export default {
   name: 'MusicList',
   components: {
-    SongList
+    SongList,
+    Loading
   },
   data () {
     return {
@@ -49,9 +54,16 @@ export default {
   watch: {
     scrollY (newY) {
       let zIndex = 0
+      let scale = 1
       let tranlateY = Math.max(this.minTranslateY, newY)
       this.$refs.layer.style['transform'] = `translate3d(0,${tranlateY}px,0)`
-      this.$refs.layer.style['webkittransform'] = `translate3d(0,${tranlateY}px,0)`
+      this.$refs.layer.style['webkitTransform'] = `translate3d(0,${tranlateY}px,0)`
+      const percent = Math.abs(newY / this.imageHignt)
+      if (newY > 0) {
+        scale = 1 + percent
+        zIndex = 10
+      }
+
       if (newY < this.minTranslateY) {
         zIndex = 10
         this.$refs.bgImage.style.paddingTop = 0
@@ -62,6 +74,8 @@ export default {
         this.$refs.bgImage.style.height = 0
         this.$refs.playBtn.style.display = ''
       }
+      this.$refs.bgImage.style['transform'] = `scale(${scale})`
+      this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`
       this.$refs.bgImage.style.zIndex = zIndex
     }
   },
@@ -159,9 +173,9 @@ export default {
     background $color-background
     .song-list-wrapper
       padding 20px 30px
-    .loading-container
-      position absolute
-      width 100%
-      top 50%
-      transform translateY(-50%)
+  .loading-container
+    position absolute
+    width 100%
+    top 65%
+    transform translateY(-50%)
 </style>

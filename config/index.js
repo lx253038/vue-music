@@ -21,14 +21,14 @@ module.exports = {
           '^/api/getDiscList': '/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
         }
       },
-      '/api/getSingerList': {
+      '/api/getcommonList': {
         target: 'https://u.y.qq.com',
         headers: {
           referer: 'https://u.y.qq.com/',
           host: 'u.y.qq.com'
         },
         pathRewrite: {
-          '^/api/getSingerList': '/cgi-bin/musicu.fcg'
+          '^/api/getcommonList': '/cgi-bin/musicu.fcg'
         }
       }
     },

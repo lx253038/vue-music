@@ -12,10 +12,10 @@ export function getRecommend () {
   })
   return jsonp(url, data, options)
 }
-// jsonp请求 所有歌手list
+// ajax请求 所有歌手list
 export function getSingerList () {
   /*  url=https://c.y.qq.com/cgi-bin/musicu.fcg */
-  const url = '/api/getSingerList'
+  const url = '/api/getcommonList'
   const data = {
     g_tk: '701595194',
     loginUin: '2530384598',
@@ -34,10 +34,32 @@ export function getSingerList () {
   })
 }
 
-/* ajax请求全部歌单 */
+// ajax 请求全部歌单
 export function getDiscList () {
-  /*     url=https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg  //实际请求地址手机端请求需更改 */
-  /*   /api/getDiscList */
+  // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'   /api/getcommonList
+  const url = '/api/getcommonList'
+  const data = {
+    g_tk: '1245137235',
+    loginUin: '2530384598',
+    hostUin: 0,
+    format: 'json',
+    inCharset: 'utf8',
+    outCharset: 'utf-8',
+    notice: 0,
+    platform: 'yqq.json',
+    needNewCode: 0,
+    data: { 'comm': { 'ct': 48 }, 'recomPlaylist': { 'method': 'get_hot_recommend', 'param': { 'async': 1, 'cmd': 3 }, 'module': 'playlist.HotRecommendServer' } }
+  }
+  return axios.get(url, { params: data }).then(function (res) {
+    return res.data.recomPlaylist
+  })
+}
+
+/* ajax请求全部歌单 */
+/*
+export function getDiscList () {
+      url=https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg  //实际请求地址手机端请求需更改
+    /api/getDiscList
   const url = '/api/getDiscList'
   const data = {
     picmid: 1,
@@ -60,4 +82,4 @@ export function getDiscList () {
   return axios.get(url, { params: data }).then(function (res) {
     return res.data
   })
-}
+} */
