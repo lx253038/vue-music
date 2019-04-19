@@ -14,7 +14,7 @@ export function getRecommend () {
 }
 // ajax请求 所有歌手list
 export function getSingerList () {
-  /*  url=https://c.y.qq.com/cgi-bin/musicu.fcg */
+  /* const url=https://c.y.qq.com/cgi-bin/musicu.fcg */
   const url = '/api/getcommonList'
   const data = {
     g_tk: '701595194',
@@ -36,7 +36,7 @@ export function getSingerList () {
 
 // ajax 请求全部歌单
 export function getDiscList () {
-  // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'   /api/getcommonList
+  /*   const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'    */
   const url = '/api/getcommonList'
   const data = {
     g_tk: '1245137235',
