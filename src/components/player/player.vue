@@ -20,40 +20,37 @@
           <h2 class="subtitle" v-html="currentSong.singer"></h2>
         </div>
         <div class="middle">
-          <div class="wrapper">
-            <swiper :options="swiperOption">
-              <!-- slides -->
-              <swiper-slide>
-                <div class="middle-l" ref="middleL">
-                  <div class="cd-wrapper" ref="cdWrapper">
-                    <div class="cd" :class="cdcls">
-                      <img class="image" :src="currentSong.image">
-                    </div>
-                  </div>
-                  <div class="playing-lyric-wrapper">
-                    <div class="playing-lyric">{{playingLyric}}</div>
+          <swiper :options="swiperOption">
+            <!-- slides -->
+            <swiper-slide>
+              <div class="middle-l" ref="middleL">
+                <div class="cd-wrapper" ref="cdWrapper">
+                  <div class="cd" :class="cdcls">
+                    <img class="image" :src="currentSong.image">
                   </div>
                 </div>
-              </swiper-slide>
-              <swiper-slide>
-                <scroll class="middle-r" ref="lyricList">
-                  <div class="lyric-wrapper">
-                    <div v-if="currentLyric">
-                      <p class="text">&nbsp;</p>
-                      <p
-                        ref="lyricLine"
-                        class="text"
-                        :class="{'current': currentLineNum ===index}"
-                        v-for="(line,index) in currentLyric.lines"
-                        :key="index"
-                      >{{line.txt}}</p>
-                    </div>
+                <div class="playing-lyric-wrapper">
+                  <div class="playing-lyric">{{playingLyric}}</div>
+                </div>
+              </div>
+            </swiper-slide>
+            <swiper-slide>
+              <scroll class="middle-r" ref="lyricList">
+                <div class="lyric-wrapper">
+                  <div v-if="currentLyric">
+                    <p
+                      ref="lyricLine"
+                      class="text"
+                      :class="{'current': currentLineNum ===index}"
+                      v-for="(line,index) in currentLyric.lines"
+                      :key="index"
+                    >{{line.txt}}</p>
                   </div>
-                </scroll>
-              </swiper-slide>
-              <div class="swiper-pagination" slot="pagination"></div>
-            </swiper>
-          </div>
+                </div>
+              </scroll>
+            </swiper-slide>
+            <div class="swiper-pagination" slot="pagination"></div>
+          </swiper>
         </div>
         <div class="bottom">
           <div class="progress-wrapper">
@@ -137,6 +134,7 @@ export default {
       currentLineNum: 0,
       currentShow: 'cd',
       swiperOption: {
+        initialSlide: 0,
         pagination: '.swiper-pagination',
         loop: false,
         autoplayDisableOnInteraction: false
@@ -385,6 +383,10 @@ export default {
 @import '~common/stylus/variable'
 @import '~common/stylus/mixin'
 .player
+  .swiper-container
+    height 100%
+  .swiper-pagination-bullets
+    bottom 0
   .normal-player
     position fixed
     left 0
@@ -481,17 +483,14 @@ export default {
             font-size $font-size-medium
             color $color-text-l
       .middle-r
-        position relative
-        top -28px
+        position fixed
         width 100%
-        height 0
-        padding-top 115%
-        bottom 50px
+        top 0px
+        bottom 32px
+        white-space nowrap
+        font-size 0
         overflow hidden
-        display inline-block
         vertical-align top
-        width 100%
-        overflow hidden
       .lyric-wrapper
         width 80%
         margin 0 auto
