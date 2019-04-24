@@ -46,10 +46,12 @@
 import Bscroll from 'better-scroll'
 import Loading from '@/base/loading/loading'
 import { mapMutations } from 'vuex'
+import { playlistMixin } from '@/common/js/mixin'
 const TITLE_HEIGHT = 29
 
 export default {
   name: 'ListView',
+  mixins: [playlistMixin],
   components: {
     Loading
   },
@@ -164,6 +166,14 @@ export default {
       this.$router.push({
         path: '/singer/' + item.id
       })
+    },
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '40px' : ''
+      this.$refs.listview.style.bottom = bottom
+      this.refresh()
+    },
+    refresh () {
+      this.scroll && this.scroll.refresh()
     },
     ...mapMutations(['changeSinger'])
   }

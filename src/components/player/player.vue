@@ -200,13 +200,16 @@ export default {
     back () {
       this.changeFullScreen(false)
     },
+    loop () {
+      this.$refs.audio.currentTime = 0
+      this.$refs.audio.play()
+      if (this.currentLyric) {
+        this.currentLyric.seek(0)
+      }
+    },
     end () {
       if (this.mode === playMode.loop) {
-        this.$refs.audio.currentTime = 0
-        this.$refs.audio.play()
-        if (this.currentLyric) {
-          this.currentLyric.seek(0)
-        }
+        this.loop()
       } else {
         this.nextSong()
       }
@@ -270,13 +273,15 @@ export default {
       if (!this.songReday) {
         return
       }
-
-      if (this.currentIndex > 0) {
-        this.changeCurrentIndex(this.currentIndex - 1)
+      if (this.playList.length === 1) {
+        this.loop()
       } else {
-        this.changeCurrentIndex(this.playList.length - 1)
+        if (this.currentIndex > 0) {
+          this.changeCurrentIndex(this.currentIndex - 1)
+        } else {
+          this.changeCurrentIndex(this.playList.length - 1)
+        }
       }
-
       if (!this.playing) {
         this.togglePlay()
       }
@@ -286,13 +291,15 @@ export default {
       if (!this.songReday) {
         return
       }
-
-      if (this.currentIndex === (this.playList.length - 1)) {
-        this.changeCurrentIndex(0)
+      if (this.playList.length === 1) {
+        this.loop()
       } else {
-        this.changeCurrentIndex(this.currentIndex + 1)
+        if (this.currentIndex === (this.playList.length - 1)) {
+          this.changeCurrentIndex(0)
+        } else {
+          this.changeCurrentIndex(this.currentIndex + 1)
+        }
       }
-
       if (!this.playing) {
         this.togglePlay()
       }

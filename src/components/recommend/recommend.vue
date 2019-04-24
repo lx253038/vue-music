@@ -31,8 +31,10 @@ import RecomSwiper from '@/base/swiper/Swiper'
 import Loading from '@/base/loading/loading'
 import { getRecommend, getDiscList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
+import { playlistMixin } from '@/common/js/mixin'
 export default {
   name: 'Recommend',
+  mixins: [playlistMixin],
   data () {
     return {
       swiperList: [],
@@ -69,6 +71,14 @@ export default {
         this.discList = res.data.v_hot
         console.log(res.data.v_hot)
       }
+    },
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.recommend.style.bottom = bottom
+      this.refresh()
+    },
+    refresh () {
+      this.scroll && this.scroll.refresh()
     },
     // 点击某一歌单
     selectItem (_this) {

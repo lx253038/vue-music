@@ -1,26 +1,26 @@
-import {mapGetters, mapMutations, mapActions} from 'vuex'
-import {playMode} from 'common/js/config'
-import {shuffle} from 'common/js/util'
+import { mapState, mapMutations, mapActions } from 'vuex'
+import { playMode } from 'common/js/config'
+import { shuffle } from 'common/js/util'
 
 export const playlistMixin = {
   computed: {
-    ...mapGetters([
-      'playlist'
+    ...mapState([
+      'playList'
     ])
   },
-  mounted() {
-    this.handlePlaylist(this.playlist)
+  mounted () {
+    this.handlePlaylist(this.playList)
   },
-  activated() {
-    this.handlePlaylist(this.playlist)
+  activated () {
+    this.handlePlaylist(this.playList)
   },
   watch: {
-    playlist(newVal) {
+    playList (newVal) {
       this.handlePlaylist(newVal)
     }
   },
   methods: {
-    handlePlaylist() {
+    handlePlaylist () {
       throw new Error('component must implement handlePlaylist method')
     }
   }
@@ -28,10 +28,10 @@ export const playlistMixin = {
 
 export const playerMixin = {
   computed: {
-    iconMode() {
+    iconMode () {
       return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
     },
-    ...mapGetters([
+    ...mapState([
       'sequenceList',
       'playlist',
       'currentSong',
@@ -40,7 +40,7 @@ export const playerMixin = {
     ])
   },
   methods: {
-    changeMode() {
+    changeMode () {
       const mode = (this.mode + 1) % 3
       this.setPlayMode(mode)
       let list = null
@@ -52,26 +52,26 @@ export const playerMixin = {
       this.resetCurrentIndex(list)
       this.setPlaylist(list)
     },
-    resetCurrentIndex(list) {
+    resetCurrentIndex (list) {
       let index = list.findIndex((item) => {
         return item.id === this.currentSong.id
       })
       this.setCurrentIndex(index)
     },
-    toggleFavorite(song) {
+    toggleFavorite (song) {
       if (this.isFavorite(song)) {
         this.deleteFavoriteList(song)
       } else {
         this.saveFavoriteList(song)
       }
     },
-    getFavoriteIcon(song) {
+    getFavoriteIcon (song) {
       if (this.isFavorite(song)) {
         return 'icon-favorite'
       }
       return 'icon-not-favorite'
     },
-    isFavorite(song) {
+    isFavorite (song) {
       const index = this.favoriteList.findIndex((item) => {
         return item.id === song.id
       })
@@ -91,28 +91,28 @@ export const playerMixin = {
 }
 
 export const searchMixin = {
-  data() {
+  data () {
     return {
       query: '',
       refreshDelay: 120
     }
   },
   computed: {
-    ...mapGetters([
+    ...mapState([
       'searchHistory'
     ])
   },
   methods: {
-    onQueryChange(query) {
+    onQueryChange (query) {
       this.query = query
     },
-    blurInput() {
+    blurInput () {
       this.$refs.searchBox.blur()
     },
-    addQuery(query) {
+    addQuery (query) {
       this.$refs.searchBox.setQuery(query)
     },
-    saveSearch() {
+    saveSearch () {
       this.saveSearchHistory(this.query)
     },
     ...mapActions([

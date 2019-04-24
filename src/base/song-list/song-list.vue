@@ -21,8 +21,10 @@
 
 <script type="text/ecmascript-6">
 import Bscroll from 'better-scroll'
+import { playlistMixin } from '@/common/js/mixin'
 export default {
   name: 'SongList',
+  mixins: [playlistMixin],
   props: {
     songlist: Array,
     rank: Boolean
@@ -42,6 +44,14 @@ export default {
     },
     selectItem (song, index) {
       this.$emit('select', song, index)
+    },
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.songlist.style.bottom = bottom
+      this.refresh()
+    },
+    refresh () {
+      this.scroll && this.scroll.refresh()
     }
   }
 }
