@@ -100,8 +100,12 @@ export default {
         index: index
       })
     },
-    ...mapActions(['selectPlay']),
-    random () { }
+    ...mapActions(['selectPlay', 'randomPlay']),
+    random () {
+      this.randomPlay({
+        list: this.songlist
+      })
+    }
   }
 }
 </script>

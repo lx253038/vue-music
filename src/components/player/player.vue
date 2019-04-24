@@ -20,17 +20,42 @@
           <h2 class="subtitle" v-html="currentSong.singer"></h2>
         </div>
         <div class="middle">
-          <div class="middle-l" ref="middleL">
-            <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd" :class="cdcls">
-                <img class="image" :src="currentSong.image">
-              </div>
-            </div>
-            <div class="playing-lyric-wrapper"></div>
+          <div class="wrapper">
+            <swiper :options="swiperOption">
+              <!-- slides -->
+              <swiper-slide>
+                <div class="middle-l" ref="middleL">
+                  <div class="cd-wrapper" ref="cdWrapper">
+                    <div class="cd" :class="cdcls">
+                      <img class="image" :src="currentSong.image">
+                    </div>
+                  </div>
+                  <div class="playing-lyric-wrapper">
+                    <div class="playing-lyric">{{playingLyric}}</div>
+                  </div>
+                </div>
+              </swiper-slide>
+              <swiper-slide>
+                <scroll class="middle-r" ref="lyricList">
+                  <div class="lyric-wrapper">
+                    <div v-if="currentLyric">
+                      <p class="text">&nbsp;</p>
+                      <p
+                        ref="lyricLine"
+                        class="text"
+                        :class="{'current': currentLineNum ===index}"
+                        v-for="(line,index) in currentLyric.lines"
+                        :key="index"
+                      >{{line.txt}}</p>
+                    </div>
+                  </div>
+                </scroll>
+              </swiper-slide>
+              <div class="swiper-pagination" slot="pagination"></div>
+            </swiper>
           </div>
         </div>
         <div class="bottom">
-          <div class="dot-wrapper"></div>
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
@@ -85,6 +110,7 @@
       @canplay="redy"
       @error="error"
       @timeupdate="updateTime"
+      @ended="end"
     />
   </div>
 </template>
@@ -96,18 +122,31 @@ import { playMode } from '@/common/js/config'
 import ProgressBar from '@/base/progress-bar/progress-bar'
 import ProCircle from '@/base/progress-circle/progress-circle'
 import { shuffle } from '@/common/js/util'
+import Lyric from 'lyric-parser'
+import Scroll from '@/base/scroll/scroll'
+
 export default {
   name: 'Player',
   data () {
     return {
       songReday: false,
       currentTime: 0,
-      radius: 32
+      radius: 32,
+      currentLyric: null,
+      playingLyric: '',
+      currentLineNum: 0,
+      currentShow: 'cd',
+      swiperOption: {
+        pagination: '.swiper-pagination',
+        loop: false,
+        autoplayDisableOnInteraction: false
+      }
     }
   },
   components: {
     ProgressBar,
-    ProCircle
+    ProCircle,
+    Scroll
   },
   computed: {
     ...mapState(['fullScreen', 'playList', 'currentIndex', 'playing', 'mode', 'sequenceList']),
@@ -139,8 +178,12 @@ export default {
   watch: {
     currentSong (newSong, oldSong) {
       if (oldSong != null && newSong.id !== oldSong.id) {
+        if (this.currentLyric) {
+          this.currentLyric.stop()
+        }
         this.$nextTick(() => {
           this.$refs.audio.play()
+          this._getLyric()
         })
       }
     },
@@ -148,6 +191,9 @@ export default {
       this.$nextTick(() => {
         const audio = this.$refs.audio
         newPlaying ? audio.play() : audio.pause()
+        if (newPlaying) {
+          this._getLyric()
+        }
       })
     }
   },
@@ -155,6 +201,17 @@ export default {
     ...mapMutations(['changeFullScreen', 'changePlaying', 'changeCurrentIndex', 'changeMode', 'changePlayList']),
     back () {
       this.changeFullScreen(false)
+    },
+    end () {
+      if (this.mode === playMode.loop) {
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.play()
+        if (this.currentLyric) {
+          this.currentLyric.seek(0)
+        }
+      } else {
+        this.nextSong()
+      }
     },
     tofullScreen () {
       this.changeFullScreen(true)
@@ -177,8 +234,36 @@ export default {
       })
       this.changeCurrentIndex(index)
     },
+    _getLyric () {
+      this.currentSong.getLyric().then((lyric) => {
+        if (this.currentSong.lyric !== lyric) {
+          return
+        }
+        this.currentLyric = new Lyric(lyric, this.handleLyric)
+        if (this.playing) {
+          this.currentLyric.play()
+        }
+      }).catch(() => {
+        this.currentLyric = null
+        this.playingLyric = ''
+        this.currentLineNum = 0
+      })
+    },
+    handleLyric ({ lineNum, txt }) {
+      this.currentLineNum = lineNum
+      if (lineNum > 5) {
+        let lineEl = this.$refs.lyricLine[lineNum - 5]
+        this.$refs.lyricList.scrollToElement(lineEl, 1000)
+      } else {
+        this.$refs.lyricList.scrollTo(0, 0, 1000)
+      }
+      this.playingLyric = txt
+    },
     togglePlay () {
       this.changePlaying(!this.playing)
+      if (this.currentLyric) {
+        this.currentLyric.togglePlay()
+      }
     },
     updateTime (e) {
       this.currentTime = e.target.currentTime
@@ -351,6 +436,10 @@ export default {
       bottom 170px
       white-space nowrap
       font-size 0
+      .wrapper
+        width 100%
+        height 0
+        padding-bottom 100%
       .middle-l
         display inline-block
         vertical-align top
@@ -392,22 +481,28 @@ export default {
             font-size $font-size-medium
             color $color-text-l
       .middle-r
+        position relative
+        top -28px
+        width 100%
+        height 0
+        padding-top 115%
+        bottom 50px
+        overflow hidden
         display inline-block
         vertical-align top
         width 100%
-        height 100%
         overflow hidden
-        .lyric-wrapper
-          width 80%
-          margin 0 auto
-          overflow hidden
-          text-align center
-          .text
-            line-height 32px
-            color $color-text-l
-            font-size $font-size-medium
-            &.current
-              color $color-text
+      .lyric-wrapper
+        width 80%
+        margin 0 auto
+        overflow hidden
+        text-align center
+        .text
+          line-height 32px
+          color $color-text-l
+          font-size $font-size-medium
+          &.current
+            color $color-text
     .bottom
       position absolute
       bottom 50px

@@ -30,7 +30,17 @@ module.exports = {
         pathRewrite: {
           '^/api/getcommonList': '/cgi-bin/musicu.fcg'
         }
-      }
+      },
+      '/api/getLyric': {
+        target: 'https://c.y.qq.com',
+        headers: {
+          referer: 'https://c.y.qq.com/',
+          host: 'c.y.qq.com'
+        },
+        pathRewrite: {
+          '^/api/getLyric': '/lyric/fcgi-bin/fcg_query_lyric.fcg',
+        }
+      },
     },
 
     // Various Dev Server settings
