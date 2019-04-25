@@ -12,7 +12,7 @@ export function getRecommend () {
   })
   return jsonp(url, data, options)
 }
-// ajax请求 所有歌手list
+// ajax请求 所有歌手list（此方法未使用）
 export function getSingerList () {
   /* const url=https://c.y.qq.com/cgi-bin/musicu.fcg */
   const url = '/api/getcommonList'
@@ -39,7 +39,7 @@ export function getDiscList () {
   /*   const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'    */
   const url = '/api/getcommonList'
   const data = {
-    g_tk: '1245137235',
+    g_tk: '5381',
     loginUin: '2530384598',
     hostUin: 0,
     format: 'json',
@@ -48,10 +48,36 @@ export function getDiscList () {
     notice: 0,
     platform: 'yqq.json',
     needNewCode: 0,
-    data: { 'comm': { 'ct': 48 }, 'recomPlaylist': { 'method': 'get_hot_recommend', 'param': { 'async': 1, 'cmd': 3 }, 'module': 'playlist.HotRecommendServer' } }
+    data: { 'comm': { 'ct': 24 }, 'playlist': { 'method': 'get_playlist_by_category', 'param': { 'id': 71, 'curPage': 1, 'size': 50, 'order': 5, 'titleid': 71 }, 'module': 'playlist.PlayListPlazaServer' } }
   }
   return axios.get(url, { params: data }).then(function (res) {
-    return res.data.recomPlaylist
+    return res.data.playlist
+  })
+}
+
+// ajax 请求根据歌单Id获取歌单音乐
+export function getSongsByDiscId (discid) {
+  /*   const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'    */
+  const url = '/api/getSongsByDiscId'
+  const data = {
+    type: 1,
+    json: 1,
+    utf8: 1,
+    onlysong: 0,
+    new_format: 1,
+    disstid: discid,
+    g_tk: 5381,
+    loginUin: 0,
+    hostUin: 0,
+    format: 'json',
+    inCharset: 'utf8',
+    outCharset: 'utf-8',
+    notice: 0,
+    platform: 'yqq.json',
+    needNewCode: 0
+  }
+  return axios.get(url, { params: data }).then(function (res) {
+    return res.data
   })
 }
 

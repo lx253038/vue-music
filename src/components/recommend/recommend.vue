@@ -8,10 +8,10 @@
           <ul>
             <li @click="selectItem(item)" v-for="item in discList" class="item" :key="item.dissid">
               <div class="icon">
-                <img width="60" height="60" v-lazy="item.cover">
+                <img width="60" height="60" v-lazy="item.cover_url_big">
               </div>
               <div class="text">
-                <h2 class="name" v-html="item.username"></h2>
+                <h2 class="name" v-html="item.creator_info.nick"></h2>
                 <p class="desc" v-html="item.title"></p>
               </div>
             </li>
@@ -22,6 +22,7 @@
     <div class="loading-container" v-show="!discList.length">
       <loading></loading>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -32,6 +33,7 @@ import Loading from '@/base/loading/loading'
 import { getRecommend, getDiscList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
 import { playlistMixin } from '@/common/js/mixin'
+import { mapMutations } from 'vuex'
 export default {
   name: 'Recommend',
   mixins: [playlistMixin],
@@ -48,10 +50,11 @@ export default {
   mounted () {
     this._getRecommend()
     this._getDiscList()
-    this.scroll = new Bscroll(this.$refs.recommend)
+    this.scroll = new Bscroll(this.$refs.recommend, { click: true })
   },
 
   methods: {
+    ...mapMutations(['changeDisc']),
     /* 推荐页轮播图片 */
     _getRecommend () {
       getRecommend().then(this.getRecommendSucc)
@@ -68,8 +71,8 @@ export default {
     },
     getDiscListSucc (res) {
       if (res.code === ERR_OK) {
-        this.discList = res.data.v_hot
-        console.log(res.data.v_hot)
+        this.discList = res.data.v_playlist
+        console.log(res.data.v_playlist)
       }
     },
     handlePlaylist (playList) {
@@ -81,8 +84,11 @@ export default {
       this.scroll && this.scroll.refresh()
     },
     // 点击某一歌单
-    selectItem (_this) {
-
+    selectItem (item) {
+      this.$router.push({
+        path: `/recommend/${item.tid}`
+      })
+      this.changeDisc(item)
     }
   }
 }

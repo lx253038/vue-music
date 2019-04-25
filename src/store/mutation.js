@@ -6,6 +6,12 @@ export default {
       localStorage.setItem('singer', JSON.stringify(singer))
     } catch (e) { }
   },
+  changeDisc (state, disc) {
+    state.disc = disc
+    try {
+      localStorage.setItem('disc', JSON.stringify(disc))
+    } catch (e) { }
+  },
   changePlaying (state, flag) {
     state.playing = flag
   },

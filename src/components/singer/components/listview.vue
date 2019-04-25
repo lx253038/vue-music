@@ -168,7 +168,7 @@ export default {
       })
     },
     handlePlaylist (playList) {
-      const bottom = playList.length > 0 ? '40px' : ''
+      const bottom = playList.length > 0 ? '50px' : ''
       this.$refs.listview.style.bottom = bottom
       this.refresh()
     },

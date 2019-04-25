@@ -6,12 +6,11 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api/getDiscList': {
+      '/api/getDiscList': { //全部歌单
         target: 'https://c.y.qq.com',
         headers: {
           referer: 'https://c.y.qq.com/',
@@ -21,7 +20,7 @@ module.exports = {
           '^/api/getDiscList': '/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
         }
       },
-      '/api/getcommonList': {
+      '/api/getcommonList': { //分类歌单
         target: 'https://u.y.qq.com',
         headers: {
           referer: 'https://u.y.qq.com/',
@@ -31,7 +30,7 @@ module.exports = {
           '^/api/getcommonList': '/cgi-bin/musicu.fcg'
         }
       },
-      '/api/getLyric': {
+      '/api/getLyric': { //获取歌词
         target: 'https://c.y.qq.com',
         headers: {
           referer: 'https://c.y.qq.com/',
@@ -41,6 +40,16 @@ module.exports = {
           '^/api/getLyric': '/lyric/fcgi-bin/fcg_query_lyric.fcg',
         }
       },
+      '/api/getSongsByDiscId': { //歌单歌曲
+        target: 'https://c.y.qq.com',
+        headers: {
+          referer: 'https://y.qq.com/n/yqq/playsquare/1141739290.html',
+          host: 'y.qq.com'
+        },
+        pathRewrite: {
+          '^/api/getSongsByDiscId': '/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
+        }
+      }
     },
 
     // Various Dev Server settings
