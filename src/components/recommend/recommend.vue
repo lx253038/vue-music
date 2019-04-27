@@ -62,7 +62,6 @@ export default {
     getRecommendSucc (res) {
       if (res.code === ERR_OK) {
         this.swiperList = res.data.slider
-        console.log(res.data.slider)
       }
     },
     /* 全部歌单 */

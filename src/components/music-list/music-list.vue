@@ -19,7 +19,7 @@
       @scroll="onscroll"
       class="list"
       :songlist="songlist"
-      :rank="false"
+      :rank="rank"
       ref="songlist"
     ></song-list>
     <div class="loading-container" v-show="!songlist.length">
@@ -47,7 +47,8 @@ export default {
   props: {
     songlist: Array,
     bgImage: String,
-    title: String
+    title: String,
+    rank: Boolean
   },
   mounted () {
     this.imageHignt = this.$refs.bgImage.clientHeight

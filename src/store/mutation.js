@@ -12,6 +12,12 @@ export default {
       localStorage.setItem('disc', JSON.stringify(disc))
     } catch (e) { }
   },
+  changeTopDisc (state, topdisc) {
+    state.topdisc = topdisc
+    try {
+      localStorage.setItem('topdisc', JSON.stringify(topdisc))
+    } catch (e) { }
+  },
   changePlaying (state, flag) {
     state.playing = flag
   },

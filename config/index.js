@@ -49,6 +49,16 @@ module.exports = {
         pathRewrite: {
           '^/api/getSongsByDiscId': '/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
         }
+      },
+      '/api/getTopList': { //排行榜
+        target: 'https://c.y.qq.com',
+        headers: {
+          referer: 'c.y.qq.com',
+          host: 'c.y.qq.com'
+        },
+        pathRewrite: {
+          '^/api/getTopList': '/v8/fcg-bin/fcg_myqq_toplist.fcg'
+        }
       }
     },
 
