@@ -7,7 +7,7 @@
 <script>
 import MusicList from 'components/music-list/music-list'
 import { mapState } from 'vuex'
-import { getSongsByDiscId } from '@/api/recommend'
+import { getRadioSongList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
 import { createSong } from '@/common/js/song'
 export default {
@@ -26,17 +26,21 @@ export default {
   computed: {
     ...mapState(['disc']),
     title () {
-      return this.disc.title
+      return this.disc.radioName
     },
     bgImage () {
-      return this.disc.cover_url_big
+      return this.disc.radioImg
     }
   },
   methods: {
     _getSongsByDiscId () {
-      getSongsByDiscId(this.disc.tid).then((res) => {
+      getRadioSongList(this.disc.radioId).then((res) => {
         if (res.code === ERR_OK) {
-          this.songlist = this._normalizeSongs(res.cdlist[0].songlist)
+          if (this.disc.radioId === '99') {
+            this.songlist = this._normalizeSongs(res.songlist.data.tracks)
+          } else {
+            this.songlist = this._normalizeSongs(res.songlist.data.track_list)
+          }
           console.log(this.songlist)
         }
       })

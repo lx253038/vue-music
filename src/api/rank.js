@@ -2,7 +2,7 @@
 import axios from 'axios'
 import jsonp from 'common/js/jsonp'
 import { commonParams, options } from './config'
-// ajax 请求排行榜
+// ajax 请求排行榜(未使用)
 export function getTopList () {
   /*   const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg'    */
   const url = '/api/getTopList'
@@ -22,16 +22,12 @@ export function getTopList () {
   })
 }
 
-// jsonp请求 歌手列表
+// jsonp请求 排行榜
 export function getTopListJsonp () {
   const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg'
   const data = Object.assign({}, commonParams, {
     _: '1556252134777',
-    g_tk: 5381,
     uin: 0,
-    inCharset: 'utf-8',
-    outCharset: 'utf-8',
-    notice: 0,
     platform: 'h5',
     needNewCode: 1
   })

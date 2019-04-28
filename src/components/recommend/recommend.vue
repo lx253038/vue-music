@@ -5,17 +5,25 @@
       <div class="recommend-content">
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
-          <ul>
-            <li @click="selectItem(item)" v-for="item in discList" class="item" :key="item.dissid">
+          <div v-for="disc in discList" :key="disc.type" class="discul">
+            <h2 class="list-group-title">{{disc.name}}</h2>
+
+            <div
+              @click="selectItem(item)"
+              v-for="item in disc.radioList"
+              class="item"
+              :key="item.radioId"
+              v-show="item.radioId!=='99'"
+            >
               <div class="icon">
-                <img width="60" height="60" v-lazy="item.cover_url_big">
+                <img width="80" height="80" v-lazy="item.radioImg">
               </div>
               <div class="text">
-                <h2 class="name" v-html="item.creator_info.nick"></h2>
-                <p class="desc" v-html="item.title"></p>
+                <h2 class="desc" v-html="item.radioName"></h2>
+                <!--  <p class="desc" v-html="disc.name"></p> -->
               </div>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -30,7 +38,7 @@
 import Bscroll from 'better-scroll'
 import RecomSwiper from '@/base/swiper/Swiper'
 import Loading from '@/base/loading/loading'
-import { getRecommend, getDiscList } from '@/api/recommend'
+import { getRecommend, getRadioList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
 import { playlistMixin } from '@/common/js/mixin'
 import { mapMutations } from 'vuex'
@@ -66,13 +74,21 @@ export default {
     },
     /* 全部歌单 */
     _getDiscList () {
-      getDiscList().then(this.getDiscListSucc)
+      getRadioList().then((res) => {
+        console.log(res.data.data.groupList)
+        if (res.code === ERR_OK) {
+          this.discList = res.data.data.groupList
+          console.log(this.discList)
+        }
+      })
     },
-    getDiscListSucc (res) {
-      if (res.code === ERR_OK) {
-        this.discList = res.data.v_playlist
-        console.log(res.data.v_playlist)
-      }
+    formatList (list) {
+      let resut = []
+      list.forEach((item) => {
+        resut.concat(item.radioList)
+        console.log(resut)
+      })
+      return resut
     },
     handlePlaylist (playList) {
       const bottom = playList.length > 0 ? '60px' : ''
@@ -85,7 +101,7 @@ export default {
     // 点击某一歌单
     selectItem (item) {
       this.$router.push({
-        path: `/recommend/${item.tid}`
+        path: `/recommend/${item.radioId}`
       })
       this.changeDisc(item)
     }
@@ -105,6 +121,17 @@ export default {
     height 100%
     overflow hidden
     .recommend-list
+      .discul
+        overflow hidden
+      .list-group-title
+        text-align left
+        height 30px
+        line-height 30px
+        padding-left 20px
+        font-size $font-size-small
+        color $color-text-l
+        background $color-highlight-background
+        margin-bottom 20px
       .list-title
         height 65px
         line-height 65px
@@ -112,14 +139,17 @@ export default {
         font-size $font-size-medium
         color $color-theme
       .item
+        width 50%
         display flex
+        float left
+        text-align center
         box-sizing border-box
         align-items center
-        padding 0 20px 20px 20px
+        padding 0 10px 20px 20px
         .icon
-          flex 0 0 60px
+          flex 0 0 80px
           width 60px
-          padding-right 20px
+          padding-right 10px
         .text
           display flex
           flex-direction column
