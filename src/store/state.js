@@ -1,5 +1,6 @@
 
 import { playMode } from '@/common/js/config'
+import { loadSearch } from '@/common/js/cache'
 let defaultsinger = {}
 let defaultdisc = {}
 let defaulttopdisc = {}
@@ -23,5 +24,6 @@ export default {
   playList: [], // 播放列表
   sequenceList: [], // 随机播放列表
   mode: playMode.sequence, // 播放模式
-  currentIndex: -1 // 当前播放歌曲索引
+  currentIndex: -1, // 当前播放歌曲索引
+  history: loadSearch()
 }

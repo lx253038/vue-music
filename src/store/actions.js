@@ -1,6 +1,6 @@
 import { playMode } from '@/common/js/config'
 import { shuffle } from '@/common/js/util'
-
+import { saveSearch, deleteSearch, clearSearch } from '@/common/js/cache'
 export default {
   selectPlay ({ commit, state }, { list, index }) {
     if (state.mode === playMode.random) {
@@ -22,7 +22,17 @@ export default {
     commit('changePlaying', true)
     commit('changeFullScreen', true)
     commit('changeCurrentIndex', 0)
+  },
+  saveHistory ({ commit }, query) {
+    commit('addQueryHistory', saveSearch(query))
+  },
+  deleteHistory ({ commit }, query) {
+    commit('addQueryHistory', deleteSearch(query))
+  },
+  clearSearch ({ commit }) {
+    commit('addQueryHistory', clearSearch())
   }
+
 }
 
 function findIndex (list, song) {

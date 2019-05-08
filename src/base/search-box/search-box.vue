@@ -7,7 +7,7 @@
 </template>
 
 <script>
-// import { debounce } from 'common/js/util'
+import { debounce } from 'common/js/util'
 
 export default {
   name: 'SearchBox',
@@ -26,15 +26,18 @@ export default {
       query: ''
     }
   },
+  activated () {
+    this.query = ''
+  },
   watch: {
     querykey (newQueryKey) {
       this.query = newQueryKey
     }
   },
   created () {
-    this.$watch('query', (newQuery) => {
+    this.$watch('query', debounce((newQuery) => {
       this.$emit('query', newQuery)
-    })
+    }, 300))
   },
   methods: {
     clear () {

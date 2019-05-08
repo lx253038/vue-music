@@ -43,12 +43,13 @@ export default new Router({
         component: TopList
       }]
     },
-
     {
       path: '/search',
       name: 'Search',
-      component: Search
-    }
-
-  ]
+      component: Search,
+      children: [{
+        path: ':id',
+        component: SingerDetail
+      }]
+    }]
 })

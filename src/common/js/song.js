@@ -44,12 +44,12 @@ export function createSong (musicData) {
     name: musicData.songname,
     album: musicData.albumname,
     duration: musicData.interval,
-    image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=334034930&vkey=EC36EE060348490A3545DD343DEF3808991B87A8551C0AE3F6D5ACC93BB4DBC9FB05887010E013EB407752A30B3B4BDA5B042FA1C4F2D1D1&uin=0&fromtag=38`
+    image: musicData.albummid ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000` : 'https://y.gtimg.cn/mediastyle/global/img/album_300.png?max_age=31536000',
+    url: `http://isure.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=334034930&vkey=B3AEFFF78188056F49603C98E233B52B04D8BF014A3506F358596F5600DD9AE13E4AF07220B1B78D5708347BFA42E8864D5FEE50F63A578D&uin=0&fromtag=38`
   })
 }
 
-function filterSinger (singer) {
+export function filterSinger (singer) {
   let ret = []
   if (!singer) {
     return ''

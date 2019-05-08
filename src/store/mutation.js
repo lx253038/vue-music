@@ -35,5 +35,8 @@ export default {
   },
   changeCurrentIndex (state, currentIndex) {
     state.currentIndex = currentIndex
+  },
+  addQueryHistory (state, history) {
+    state.history = history
   }
 }
