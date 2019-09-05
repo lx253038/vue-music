@@ -4,6 +4,7 @@ import { loadSearch } from '@/common/js/cache'
 let defaultsinger = {}
 let defaultdisc = {}
 let defaulttopdisc = {}
+let defaultvkey = ''
 try {
   if (localStorage.getItem('singer')) {
     defaultsinger = JSON.parse(localStorage.getItem('singer'))
@@ -14,8 +15,12 @@ try {
   if (localStorage.getItem('topdisc')) {
     defaulttopdisc = JSON.parse(localStorage.getItem('topdisc'))
   }
+  if (localStorage.getItem('vkey')) {
+    defaultvkey = localStorage.getItem('vkey')
+  }
 } catch (e) { }
 export default {
+  vkey: defaultvkey,
   singer: defaultsinger, // 歌手信息
   disc: defaultdisc, // 歌单显示
   topdisc: defaulttopdisc, // 排行榜歌单

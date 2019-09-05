@@ -100,7 +100,7 @@
         </div>
       </div>
     </transition>
-
+    <play-list ref="playlist"></play-list>
     <audio
       ref="audio"
       :src="currentSong.url"
@@ -118,11 +118,12 @@ import animations from 'create-keyframe-animation'
 import { playMode } from '@/common/js/config'
 import ProgressBar from '@/base/progress-bar/progress-bar'
 import ProCircle from '@/base/progress-circle/progress-circle'
-import { shuffle } from '@/common/js/util'
 import Lyric from 'lyric-parser'
 import Scroll from '@/base/scroll/scroll'
-
+import { playerMixin } from '@/common/js/mixin'
+import PlayList from 'components/playlist/playlist'
 export default {
+  mixins: [playerMixin],
   name: 'Player',
   data () {
     return {
@@ -144,7 +145,8 @@ export default {
   components: {
     ProgressBar,
     ProCircle,
-    Scroll
+    Scroll,
+    PlayList
   },
   computed: {
     ...mapState(['fullScreen', 'playList', 'currentIndex', 'playing', 'mode', 'sequenceList']),
@@ -162,20 +164,11 @@ export default {
     },
     percent () {
       return this.currentTime / this.currentSong.duration
-    },
-    iconMode () {
-      if (this.mode === playMode.random) {
-        return 'icon-random'
-      } else if (this.mode === playMode.sequence) {
-        return 'icon-sequence'
-      } else {
-        return 'icon-loop'
-      }
     }
   },
   watch: {
     currentSong (newSong, oldSong) {
-      if (oldSong != null && newSong.id !== oldSong.id) {
+      if (oldSong && newSong && newSong.id !== oldSong.id) {
         if (this.currentLyric) {
           this.currentLyric.stop()
         }
@@ -217,24 +210,6 @@ export default {
     tofullScreen () {
       this.changeFullScreen(true)
     },
-    _changeMode () {
-      const mode = (this.mode + 1) % 3
-      this.changeMode(mode)
-      let list = null
-      if (mode === playMode.random) {
-        list = shuffle(this.sequenceList)
-      } else {
-        list = this.sequenceList
-      }
-      this.resetCurrentIndex(list)
-      this.changePlayList(list)
-    },
-    resetCurrentIndex (list) {
-      let index = list.findIndex((item) => {
-        return item.id === this.currentSong.id
-      })
-      this.changeCurrentIndex(index)
-    },
     _getLyric () {
       this.currentSong.getLyric().then((lyric) => {
         if (this.currentSong.lyric !== lyric) {
@@ -252,7 +227,7 @@ export default {
     },
     handleLyric ({ lineNum, txt }) {
       this.currentLineNum = lineNum
-      if (lineNum > 5) {
+      if (this.playing && lineNum > 5) {
         let lineEl = this.$refs.lyricLine[lineNum - 5]
         this.$refs.lyricList.scrollToElement(lineEl, 1000)
       } else {
@@ -310,6 +285,9 @@ export default {
       if (!this.playing) {
         this.togglePlay()
       }
+    },
+    showPlaylist () {
+      this.$refs.playlist.show()
     },
     redy () {
       this.songReday = true

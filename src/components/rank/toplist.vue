@@ -25,7 +25,7 @@ export default {
     this._getTopSongJsonp()
   },
   computed: {
-    ...mapState(['topdisc']),
+    ...mapState(['topdisc', 'vkey']),
     title () {
       return this.topdisc.topTitle
     },
@@ -56,7 +56,7 @@ export default {
         musicData.albumname = item.album.name
         musicData.interval = item.interval
         if (musicData.songid && musicData.albummid) {
-          ret.push(createSong(musicData))
+          ret.push(createSong(musicData, this.vkey))
         }
       })
       return ret

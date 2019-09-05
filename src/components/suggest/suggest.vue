@@ -26,7 +26,7 @@
 import Bscroll from 'better-scroll'
 import Loading from '@/base/loading/loading'
 import NoResult from '@/base/no-result/no-result'
-import { mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import { createSong } from '@/common/js/song'
 import { searchByKeyWord } from '@/api/search'
 import { ERR_OK } from '@/api/config'
@@ -56,6 +56,9 @@ export default {
       hasSinger: false,
       hasMore: true
     }
+  },
+  computed: {
+    ...mapState(['vkey'])
   },
   mounted () {
     this.scroll = new Bscroll(this.$refs.suggest, { click: true })
@@ -139,7 +142,7 @@ export default {
         musicData.albumname = item.album.name
         musicData.interval = item.interval
         if (musicData.songid) {
-          ret.push(createSong(musicData))
+          ret.push(createSong(musicData, this.vkey))
         }
       })
       this.songlist = this.songlist.concat(ret)

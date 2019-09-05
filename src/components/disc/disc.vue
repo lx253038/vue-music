@@ -24,7 +24,7 @@ export default {
     this._getSongsByDiscId()
   },
   computed: {
-    ...mapState(['disc']),
+    ...mapState(['disc', 'vkey']),
     title () {
       return this.disc.radioName
     },
@@ -57,7 +57,7 @@ export default {
         musicData.albumname = item.album.name
         musicData.interval = item.interval
         if (musicData.songid && musicData.albummid) {
-          ret.push(createSong(musicData))
+          ret.push(createSong(musicData, this.vkey))
         }
       })
       return ret

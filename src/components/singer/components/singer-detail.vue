@@ -24,7 +24,7 @@ export default {
     this._getSongListById()
   },
   computed: {
-    ...mapState(['singer']),
+    ...mapState(['singer', 'vkey']),
     title () {
       return this.singer.name
     },
@@ -46,7 +46,7 @@ export default {
       list.forEach((item) => {
         let musicData = item.musicData
         if (musicData.songid && musicData.albummid) {
-          ret.push(createSong(musicData))
+          ret.push(createSong(musicData, this.vkey))
         }
       })
       return ret

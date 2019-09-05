@@ -1,6 +1,6 @@
-import { mapState, mapMutations, mapActions } from 'vuex'
-import { playMode } from 'common/js/config'
-import { shuffle } from 'common/js/util'
+import { mapState, mapActions } from 'vuex'
+import { playMode } from '@/common/js/config'
+import { shuffle } from '@/common/js/util'
 
 export const playlistMixin = {
   computed: {
@@ -29,20 +29,19 @@ export const playlistMixin = {
 export const playerMixin = {
   computed: {
     iconMode () {
-      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-    },
-    ...mapState([
-      'sequenceList',
-      'playlist',
-      'currentSong',
-      'mode',
-      'favoriteList'
-    ])
+      if (this.mode === playMode.random) {
+        return 'icon-random'
+      } else if (this.mode === playMode.sequence) {
+        return 'icon-sequence'
+      } else {
+        return 'icon-loop'
+      }
+    }
   },
   methods: {
-    changeMode () {
+    _changeMode () {
       const mode = (this.mode + 1) % 3
-      this.setPlayMode(mode)
+      this.changeMode(mode)
       let list = null
       if (mode === playMode.random) {
         list = shuffle(this.sequenceList)
@@ -50,13 +49,13 @@ export const playerMixin = {
         list = this.sequenceList
       }
       this.resetCurrentIndex(list)
-      this.setPlaylist(list)
+      this.changePlayList(list)
     },
     resetCurrentIndex (list) {
       let index = list.findIndex((item) => {
         return item.id === this.currentSong.id
       })
-      this.setCurrentIndex(index)
+      this.changeCurrentIndex(index)
     },
     toggleFavorite (song) {
       if (this.isFavorite(song)) {
@@ -76,17 +75,7 @@ export const playerMixin = {
         return item.id === song.id
       })
       return index > -1
-    },
-    ...mapMutations({
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlaylist: 'SET_PLAYLIST',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayingState: 'SET_PLAYING_STATE'
-    }),
-    ...mapActions([
-      'saveFavoriteList',
-      'deleteFavoriteList'
-    ])
+    }
   }
 }
 

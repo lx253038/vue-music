@@ -1,5 +1,11 @@
 
 export default {
+  changevkey (state, vkey) {
+    state.vkey = vkey
+    try {
+      localStorage.setItem('vkey', vkey)
+    } catch (e) { }
+  },
   changeSinger (state, singer) {
     state.singer = singer
     try {

@@ -38,7 +38,7 @@
 import Bscroll from 'better-scroll'
 import RecomSwiper from '@/base/swiper/Swiper'
 import Loading from '@/base/loading/loading'
-import { getRecommend, getRadioList } from '@/api/recommend'
+import { getRecommend, getRadioList, getSongVkey } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
 import { playlistMixin } from '@/common/js/mixin'
 import { mapMutations } from 'vuex'
@@ -58,11 +58,12 @@ export default {
   mounted () {
     this._getRecommend()
     this._getDiscList()
+    this._getSongVkey()
     this.scroll = new Bscroll(this.$refs.recommend, { click: true })
   },
 
   methods: {
-    ...mapMutations(['changeDisc']),
+    ...mapMutations(['changeDisc', 'changevkey']),
     /* 推荐页轮播图片 */
     _getRecommend () {
       getRecommend().then(this.getRecommendSucc)
@@ -80,6 +81,13 @@ export default {
           this.discList = res.data.data.groupList
           console.log(this.discList)
         }
+      })
+    },
+    _getSongVkey () {
+      getSongVkey().then((res) => {
+        let vkey = res.data.items[0].vkey
+        console.log(vkey)
+        this.changevkey(vkey)
       })
     },
     formatList (list) {
