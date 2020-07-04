@@ -8,13 +8,7 @@
           <div v-for="disc in discList" :key="disc.type" class="discul">
             <h2 class="list-group-title">{{disc.name}}</h2>
 
-            <div
-              @click="selectItem(item)"
-              v-for="item in disc.radioList"
-              class="item"
-              :key="item.radioId"
-              v-show="item.radioId!=='99'"
-            >
+            <div @click="selectItem(item)" v-for="item in disc.radioList" class="item" :key="item.radioId" v-show="item.radioId!=='99'">
               <div class="icon">
                 <img width="80" height="80" v-lazy="item.radioImg">
               </div>
@@ -75,7 +69,7 @@ export default {
     },
     /* 全部歌单 */
     _getDiscList () {
-      getRadioList().then((res) => {
+      getRadioList().then(res => {
         console.log(res.data.data.groupList)
         if (res.code === ERR_OK) {
           this.discList = res.data.data.groupList
@@ -84,15 +78,13 @@ export default {
       })
     },
     _getSongVkey () {
-      getSongVkey().then((res) => {
-        let vkey = res.data.items[0].vkey
-        console.log(vkey)
-        this.changevkey(vkey)
+      getSongVkey().then(res => {
+
       })
     },
     formatList (list) {
       let resut = []
-      list.forEach((item) => {
+      list.forEach(item => {
         resut.concat(item.radioList)
         console.log(resut)
       })

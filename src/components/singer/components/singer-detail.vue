@@ -8,6 +8,7 @@
 import MusicList from 'components/music-list/music-list'
 import { mapState } from 'vuex'
 import { getSongListById } from '@/api/singer'
+import { getSongVkey2 } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
 import { createSong } from '@/common/js/song'
 export default {
@@ -24,7 +25,7 @@ export default {
     this._getSongListById()
   },
   computed: {
-    ...mapState(['singer', 'vkey']),
+    ...mapState(['singer']),
     title () {
       return this.singer.name
     },
@@ -34,7 +35,7 @@ export default {
   },
   methods: {
     _getSongListById () {
-      getSongListById(this.singer.id).then((res) => {
+      getSongListById(this.singer.id).then(res => {
         if (res.code === ERR_OK) {
           this.songlist = this._normalizeSongs(res.data.list)
           console.log(this.songlist)
@@ -43,10 +44,12 @@ export default {
     },
     _normalizeSongs (list) {
       let ret = []
-      list.forEach((item) => {
+      list.forEach(item => {
         let musicData = item.musicData
         if (musicData.songid && musicData.albummid) {
-          ret.push(createSong(musicData, this.vkey))
+          getSongVkey2(musicData.songmid).then((res) => {
+            ret.push(createSong(musicData, res.req_0.data.midurlinfo[0].purl))
+          })
         }
       })
       return ret

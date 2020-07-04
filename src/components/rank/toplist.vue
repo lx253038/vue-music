@@ -9,6 +9,7 @@ import MusicList from 'components/music-list/music-list'
 import { mapState } from 'vuex'
 import { getTopSongJsonp } from '@/api/rank'
 import { ERR_OK } from '@/api/config'
+import { getSongVkey2 } from '@/api/recommend'
 import { createSong } from '@/common/js/song'
 export default {
   name: 'TopList',
@@ -25,7 +26,7 @@ export default {
     this._getTopSongJsonp()
   },
   computed: {
-    ...mapState(['topdisc', 'vkey']),
+    ...mapState(['topdisc']),
     title () {
       return this.topdisc.topTitle
     },
@@ -38,6 +39,7 @@ export default {
   },
   methods: {
     _getTopSongJsonp () {
+      console.log(11111111)
       getTopSongJsonp(this.topdisc.id).then((res) => {
         if (res.code === ERR_OK) {
           this.songlist = this._normalizeSongs(res.detail.data.songInfoList)
@@ -48,6 +50,7 @@ export default {
       let ret = []
       list.forEach((item) => {
         let musicData = {}
+        // console.log(item)
         musicData.songid = item.id
         musicData.albummid = item.album.mid
         musicData.songmid = item.mid
@@ -56,7 +59,9 @@ export default {
         musicData.albumname = item.album.name
         musicData.interval = item.interval
         if (musicData.songid && musicData.albummid) {
-          ret.push(createSong(musicData, this.vkey))
+          getSongVkey2(musicData.songmid).then((res) => {
+            ret.push(createSong(musicData, res.req_0.data.midurlinfo[0].purl))
+          })
         }
       })
       return ret

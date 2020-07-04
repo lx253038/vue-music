@@ -14,7 +14,7 @@ export function getRecommend () {
 }
 
 // 获取vkey
-export function getSongVkey () {
+export function getSongVkey (songmid) {
   const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg'
   const data = Object.assign({}, commonParams, {
     callback: 'musicJsonCallback',
@@ -25,10 +25,27 @@ export function getSongVkey () {
     cid: 205361747,
     uin: 2530384598,
     guid: 9152999990,
-    songmid: '003clL2S0lVVSF',
-    filename: `C400003clL2S0lVVSF.m4a`
+    songmid: songmid,
+    filename: `C400003mBrF72dILfK.m4a`
   })
 
+  return jsonp(url, data)
+}
+
+export function getSongVkey2 (songmid) {
+  const url = `https://u.y.qq.com/cgi-bin/musicu.fcg?data=%7B"req"%3A%7B"module"%3A"CDN.SrfCdnDispatchServer"%2C"method"%3A"GetCdnDispatch"%2C"param"%3A%7B"guid"%3A"4191963453"%2C"calltype"%3A0%2C"userip"%3A""%7D%7D%2C"req_0"%3A%7B"module"%3A"vkey.GetVkeyServer"%2C"method"%3A"CgiGetVkey"%2C"param"%3A%7B"guid"%3A"4191963453"%2C"songmid"%3A%5B"${songmid}"%5D%2C"songtype"%3A%5B0%5D%2C"uin"%3A"2530384598"%2C"loginflag"%3A1%2C"platform"%3A"20"%7D%7D%2C"comm"%3A%7B"uin"%3A2530384598%2C"format"%3A"json"%2C"ct"%3A24%2C"cv"%3A0%7D%7D`
+  const data = Object.assign({}, commonParams, {
+    '-': 'getplaysongvkey236822762818',
+    g_tk: 1015932300,
+    loginUin: 2530384598,
+    hostUin: 0,
+    format: 'json',
+    inCharset: 'utf8',
+    outCharset: 'utf-8',
+    notice: 0,
+    platform: 'yqq.json',
+    needNewCode: 0
+  })
   return jsonp(url, data)
 }
 

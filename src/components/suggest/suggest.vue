@@ -26,10 +26,11 @@
 import Bscroll from 'better-scroll'
 import Loading from '@/base/loading/loading'
 import NoResult from '@/base/no-result/no-result'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import { createSong } from '@/common/js/song'
 import { searchByKeyWord } from '@/api/search'
 import { ERR_OK } from '@/api/config'
+import { getSongVkey2 } from '@/api/recommend'
 const TYPE_SINGER = 'singer'
 const perpage = 20
 export default {
@@ -58,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['vkey'])
+
   },
   mounted () {
     this.scroll = new Bscroll(this.$refs.suggest, { click: true })
@@ -89,7 +90,7 @@ export default {
       searchByKeyWord(this.query, this.page, this.showSinger, perpage).then((res) => {
         if (res.code === ERR_OK) {
           console.log(res.data)
-          this.result = this._genResult(res.data)
+          this._genResult(res.data)
           this._checkHasMore(res.data)
           console.log(this.result)
         }
@@ -103,7 +104,7 @@ export default {
       searchByKeyWord(this.query, this.page, this.showSinger, perpage).then((res) => {
         if (res.code === ERR_OK) {
           console.log(res.data)
-          this.result = this.result.concat(this._genResult(res.data))
+          this._genResult(res.data)
           this._checkHasMore(res.data)
           console.log(this.result)
         }
@@ -120,18 +121,15 @@ export default {
       if (this.page === 1) {
         this.hasSinger = false
       }
-      let ret = []
       if (data.zhida && data.zhida.zhida_singer && data.zhida.zhida_singer.singerMID && this.page === 1) {
-        ret.push({ ...data.zhida.zhida_singer, ...{ type: TYPE_SINGER } })
+        this.result.push({ ...data.zhida.zhida_singer, ...{ type: TYPE_SINGER } })
         this.hasSinger = true
       }
       if (data.song) {
-        ret = ret.concat(this._normalizeSongs(data.song.list))
+        this._normalizeSongs(data.song.list)
       }
-      return ret
     },
     _normalizeSongs (list) {
-      let ret = []
       list.forEach((item) => {
         let musicData = {}
         musicData.songid = item.id
@@ -142,11 +140,13 @@ export default {
         musicData.albumname = item.album.name
         musicData.interval = item.interval
         if (musicData.songid) {
-          ret.push(createSong(musicData, this.vkey))
+          getSongVkey2(musicData.songmid).then((res) => {
+            var song = createSong(musicData, res.req_0.data.midurlinfo[0].purl)
+            this.result.push(song)
+            this.songlist.push(song)
+          })
         }
       })
-      this.songlist = this.songlist.concat(ret)
-      return ret
     },
     selectItem (item, index) {
       if (this.hasSinger) {

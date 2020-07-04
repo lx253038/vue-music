@@ -7,9 +7,10 @@
 <script>
 import MusicList from 'components/music-list/music-list'
 import { mapState } from 'vuex'
-import { getRadioSongList } from '@/api/recommend'
+import { getRadioSongList, getSongVkey2 } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
 import { createSong } from '@/common/js/song'
+
 export default {
   name: 'Disc',
   components: {
@@ -24,7 +25,7 @@ export default {
     this._getSongsByDiscId()
   },
   computed: {
-    ...mapState(['disc', 'vkey']),
+    ...mapState(['disc']),
     title () {
       return this.disc.radioName
     },
@@ -57,7 +58,9 @@ export default {
         musicData.albumname = item.album.name
         musicData.interval = item.interval
         if (musicData.songid && musicData.albummid) {
-          ret.push(createSong(musicData, this.vkey))
+          getSongVkey2(musicData.songmid).then((res) => {
+            ret.push(createSong(musicData, res.req_0.data.midurlinfo[0].purl))
+          })
         }
       })
       return ret
